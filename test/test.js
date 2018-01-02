@@ -15,10 +15,29 @@ describe('directoryTree', () => {
 	});
 
 	it('should list the children in a directory', () => {
+		const tree = dirtree('./test/test_data');
+
+		expect(tree.children.length).to.equal(4);
+		expect(tree.children[2].children.length).to.equal(3);
+		expect(tree.children[3].children.length).to.equal(1);
+	});
+	
+	it('should list the children in a directory and filter .txt extensions', () => {
 		const tree = dirtree('./test/test_data', {extensions:/\.txt$/});
 
 		// 4 including the empty `some_dir_2`.
 		expect(tree.children.length).to.equal(4);
+		expect(tree.children[2].children.length).to.equal(3);
+		expect(tree.children[3].children.length).to.equal(0);
+	});
+
+	it('should list the children in a directory and filter directories', () => {
+		const tree = dirtree('./test/test_data', {directories:['test/test_data/some_dir']});
+
+		// some_dir_2 children should be empty
+		expect(tree.children.length).to.equal(4);
+		expect(tree.children[2].children.length).to.equal(3);
+		expect(tree.children[3].children.length).to.equal(0);
 	});
 
 	it('should execute a callback function for each file with no specified extensions', () => {
